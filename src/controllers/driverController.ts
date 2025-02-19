@@ -1,10 +1,14 @@
 import { Request, Response } from "express";
 import Driver from "../models/Driver";
 import { Error as MongooseError } from "mongoose";
+
 const { ValidationError } = MongooseError;
 
-const getFlagUrl = (countryCode: string): string =>
-  `https://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode.toUpperCase()}.svg`;
+
+const getFlagUrl = (countryCode?: string): string | null =>
+  countryCode
+    ? `https://purecatamphetamine.github.io/country-flag-icons/3x2/${countryCode.toUpperCase()}.svg`
+    : null;
 
 export const getDrivers = async (req: Request, res: Response) => {
   try {
@@ -21,9 +25,10 @@ export const getDrivers = async (req: Request, res: Response) => {
 
     const drivers = await Driver.find(query).lean();
 
+    
     const driversWithFlag = drivers.map((driver) => ({
       ...driver,
-      flag: getFlagUrl(driver.countryCode),
+      countryCode: getFlagUrl(driver.countryCode),
     }));
 
     res.status(200).json(driversWithFlag);
