@@ -16,6 +16,6 @@ export const createRace = async (req: Request, res: Response) => {
         await newRace.save();
         res.status(201).json(newRace);
     } catch (error) {
-        res.status(500).json({ error: "Ошибка при создании гонки" });
+        res.status(500).json({ error: "Error" });
     }
 };

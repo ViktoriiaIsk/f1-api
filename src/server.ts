@@ -25,7 +25,6 @@ app.use("/teams", teamRoutes);
 app.use("/drivers", driverRoutes);
 app.use("/circuits", circuitRoutes);
 
-
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to the Formula 1 API!" });
 });
@@ -36,6 +35,7 @@ app.all("*", notFound);
 try {
   await mongoose.connect(process.env.MONGO_URI!);
   console.log("Database connection OK");
+
 } catch (err) {
   console.error(err);
   process.exit(1);
