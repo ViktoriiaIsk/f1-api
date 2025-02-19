@@ -1,21 +1,22 @@
 import { Request, Response } from "express";
 import Circuit from "../models/Circuit";
+import { Error as MongooseError } from "mongoose";
+const { ValidationError } = MongooseError;
 
 export const getCircuits = async (req: Request, res: Response) => {
-    try {
-        const circuits = await Circuit.find();
-        res.json(circuits);
-    } catch (error) {
-        res.status(500).json({ error: "Server error" });
-    }
-};
+  try {
+    const search = req.query.search as string | undefined;
+    const query = search ? { name: { $regex: search, $options: "i" } } : {};
 
-export const createCircuit = async (req: Request, res: Response) => {
-    try {
-        const circuit = new Circuit(req.body);
-        await circuit.save();
-        res.status(201).json(circuit);
-    } catch (error) {
-        res.status(400).json({ error: "Invalid data" });
+    const circuits = await Circuit.find(query).lean();
+    res.status(200).json(circuits);
+  } catch (err: unknown) {
+    if (err instanceof ValidationError) {
+      res.status(400).json({ message: err.message });
+    } else if (err instanceof Error) {
+      res.status(500).json({ message: err.message });
+    } else {
+      res.status(500).json({ message: "Something went wrong" });
     }
+  }
 };
