@@ -2,11 +2,12 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-import { notFound } from "./controllers/notFoundController";
 import raceRoutes from "./routes/raceRoutes";
 import teamRoutes from "./routes/teamRoutes";
 import driverRoutes from "./routes/driverRoutes";
 import circuitRoutes from "./routes/circuitRoutes";
+import { notFound } from "./controllers/notFoundController";
+
 import { helloMiddleware } from "./middleware/exampleMiddleware";
 import mongoose from "mongoose";
 
@@ -23,6 +24,12 @@ app.use("/races", raceRoutes);
 app.use("/teams", teamRoutes);
 app.use("/drivers", driverRoutes);
 app.use("/circuits", circuitRoutes);
+
+
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the Formula 1 API!" });
+});
+
 app.all("*", notFound);
 
 // Database connection
