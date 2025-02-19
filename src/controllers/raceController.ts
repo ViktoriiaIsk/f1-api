@@ -47,10 +47,15 @@ export const getRaces = async (req: Request, res: Response) => {
 
         return {
           ...race,
-          race_results: raceResults,
-          flag: (race as any).countryCode
-            ? getFlagUrl((race as any).countryCode)
-            : undefined,
+          race_results: raceResults.map((result) => ({
+            ...result,
+            driver: {
+              ...result.driver,
+              countryCode: result.driver?.countryCode
+                ? getFlagUrl(result.driver.countryCode)
+                : null,
+            },
+          })),
         };
       })
     );
