@@ -1,5 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
 
+interface ITeamDriver {
+    driver_id: mongoose.Types.ObjectId;
+    position: number;
+}
+
 interface ITeam extends Document {
     team_id: string;
     name: string;
@@ -7,7 +12,7 @@ interface ITeam extends Document {
     base: string;
     founded_year: number;
     engine: string;
-    drivers: { driver_id: mongoose.Types.ObjectId; position: number }[];
+    drivers: ITeamDriver[];
     image: string;
 }
 
